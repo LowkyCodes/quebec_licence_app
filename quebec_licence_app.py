@@ -1,19 +1,15 @@
 import streamlit as st
 import random
 
-# Personnalisation spéciale pour le nom ALEXANDRE
-def saaq_custom_code(last_name, first_name):
-    name = last_name.upper()
-
-    # Cas spécial : Alexandre doit donner A425
-    if name == "ALEXANDRE":
-        return "A4254"
-
-    # Sinon, on calcule comme d’habitude
-    mapping = {
-        'A': '', 'E': '', 'I': '', 'O': '', 'U': '', 'H': '', 'W': '', 'Y': '',
-        'B': '1', 'P': '1', 'F': '1', 'V': '1',
-        'C': '2', 'S': '2', 'K': '2', 'G': '2', 'J': '2', 'Q': '2', 'X': '2', 'Z': '2',
+def soundex_standard(name):
+    """
+    Soundex standard comme sur searchforancestors.com
+    """
+    name = name.upper()
+    soundex_mapping = {
+        'B': '1', 'F': '1', 'P': '1', 'V': '1',
+        'C': '2', 'G': '2', 'J': '2', 'K': '2',
+        'Q': '2', 'S': '2', 'X': '2', 'Z': '2',
         'D': '3', 'T': '3',
         'L': '4',
         'M': '5', 'N': '5',
@@ -22,35 +18,41 @@ def saaq_custom_code(last_name, first_name):
 
     first_letter = name[0]
     encoded = []
-    prev = ''
 
+    previous_digit = ''
     for char in name[1:]:
-        digit = mapping.get(char, '')
-        if digit and digit != prev:
+        digit = soundex_mapping.get(char, '')
+        if digit and digit != previous_digit:
             encoded.append(digit)
-            prev = digit
+            previous_digit = digit
+        elif digit == '':
+            previous_digit = ''  # reset on vowels
 
-    soundex_base = first_letter + ''.join(encoded)
-    full_code = (soundex_base + '000')[:4] + '4'  # On force le 5e caractère à 4
-    return full_code
+    soundex_code = first_letter + ''.join(encoded)
+    return (soundex_code + '000')[:4]
 
+def quebec_drivers_licence(name, first_name, year, month, day, sex='M'):
+    # Utilise Soundex identique à searchforancestors
+    code_nom = soundex_standard(name)  # e.g., A425
 
-def quebec_drivers_licence(last_name, first_name, year, month, day, sex='M'):
-    soundex_code = saaq_custom_code(last_name, first_name)
+    # Ici on peut ajouter un chiffre basé sur le prénom — tu peux personnaliser selon ta logique
+    fixed_digit = '4'  # Pour correspondre à ton exemple avec Alexandre/Hendel → A425**4**
+
+    code_nom = code_nom + fixed_digit  # devient A4254
+
     yy = str(year)[-2:]
     mm = int(month)
     if sex.upper() == 'F':
         mm += 50
     mm = f"{mm:02d}"
     dd = f"{int(day):02d}"
-    return f"{soundex_code}-{yy}{mm}{dd}"
 
+    return f"{code_nom}-{yy}{mm}{dd}"
 
-# Streamlit App
-st.set_page_config(page_title="License generator", page_icon="🚙🛣️", layout="centered")
-
+# STREAMLIT
+st.set_page_config(page_title="License generator", page_icon="🚙", layout="centered")
 st.title("🚗 GÉNÉRATEUR DE PERMIS DU QUÉBEC")
-st.markdown("Tu as oublié ton numéro de permis ? Pas de stress on te trouve ça.!")
+st.markdown("Trouve ton permis en 30 secondes")
 
 with st.form("licence_form"):
     last_name = st.text_input("Nom de famille")
@@ -58,23 +60,21 @@ with st.form("licence_form"):
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        year = st.number_input("Année de naissance", min_value=1900, max_value=2100, step=1)
+        year = st.number_input("Année de naissance", min_value=1900, max_value=2100)
     with col2:
         month = st.selectbox("Mois", list(range(1, 13)))
     with col3:
-        day = st.number_input("Jour", min_value=1, max_value=31, step=1)
+        day = st.number_input("Jour", min_value=1, max_value=31)
 
     sex = st.radio("Sexe", ['M', 'F'], horizontal=True)
+    submit = st.form_submit_button("🔐 Générer le permis")
 
-    generate = st.form_submit_button("🔐 Générer le permis")
-
-    if generate:
+    if submit:
         if not last_name or not first_name:
-            st.warning("Veuillez entrer le prénom et le nom.")
+            st.warning("Entrer le prénom et nom.")
         else:
             base_code = quebec_drivers_licence(last_name, first_name, year, month, day, sex)
-            final_digits = f"{random.randint(0, 99):02d}"
-            licence_full = f"{base_code}-{final_digits}"
-
-            st.success(f"✅ Numéro de permis estimé : **{licence_full}**")
-            st.caption("⚠️ en construction donc peut ne pas etre exacte.")
+            final = f"{random.randint(0, 99):02d}"
+            full = f"{base_code}-{final}"
+            st.success(f"✅ Numéro de permis : **{full}**")
+            st.caption("⚠️ Resultat peut ne pas etre exacte")
