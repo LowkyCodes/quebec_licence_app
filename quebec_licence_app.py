@@ -50,7 +50,7 @@ def quebec_drivers_licence(name, first_name, year, month, day, sex='M'):
 
 # STREAMLIT
 st.set_page_config(page_title="License generator", page_icon="🚙", layout="centered")
-st.title("SAAQlick Pas du tout!")
+st.title("♠️♣️🃏SAAQlick Pas du tout!")
 st.markdown("Trouve ton permis en 30 secondes")
 
 with st.form("licence_form"):
