@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-# ---------- Soundex Function ----------
+
 def soundex(name):
     name = name.upper()
     soundex_mapping = {
@@ -26,7 +26,7 @@ def soundex(name):
     return (soundex_code + '000')[:4]
 
 
-# ---------- Licence Generator ----------
+
 def quebec_drivers_licence(last_name, first_name, year, month, day, sex='M'):
     soundex_code = soundex(last_name)
     yy = str(year)[-2:]
@@ -38,10 +38,10 @@ def quebec_drivers_licence(last_name, first_name, year, month, day, sex='M'):
     return f"{soundex_code}-{yy}{mm}{dd}"
 
 
-# ---------- UI Layout ----------
-st.set_page_config(page_title="Permis de Conduire Québec", page_icon="🚗", layout="centered")
 
-st.title("🚗 Générateur de Permis de Conduire du Québec")
+st.set_page_config(page_title="License generator", page_icon="🚗", layout="centered")
+
+st.title("🚗 QUEBEC LICENCE GENERATOR")
 st.markdown("Remplissez les informations ci-dessous pour générer un numéro de permis valide au format québécois (simulation).")
 
 with st.form("licence_form"):
@@ -68,5 +68,5 @@ with st.form("licence_form"):
             final_digits = f"{random.randint(0, 99):02d}"
             licence_full = f"{base_code}-{final_digits}"
 
-            st.success(f"✅ Numéro de permis généré : **{licence_full}**")
-            st.caption("⚠️ Note : Ceci est une simulation. Ce numéro n'est pas vérifiable auprès de la SAAQ.")
+            st.success(f"✅ Numéro de permis : **{licence_full}**")
+            st.caption("⚠️ Note : les deux derniers chiffres ne sont pas valide mais le reste oui.")
