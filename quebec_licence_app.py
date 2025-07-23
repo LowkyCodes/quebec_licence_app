@@ -33,12 +33,11 @@ def soundex_standard(name):
 
 def quebec_drivers_licence(name, first_name, year, month, day, sex='M'):
     # Utilise Soundex identique à searchforancestors
-    code_nom = soundex_standard(name)  # e.g., A425
+    code_nom = soundex_standard(name)
 
-    # Ici on peut ajouter un chiffre basé sur le prénom — tu peux personnaliser selon ta logique
-    fixed_digit = '4'  # Pour correspondre à ton exemple avec Alexandre/Hendel → A425**4**
-
-    code_nom = code_nom + fixed_digit  # devient A4254
+    # Ajout d'un chiffre fixe à la fin pour compléter le bloc de nom
+    fixed_digit = '4'
+    code_nom = code_nom + fixed_digit
 
     yy = str(year)[-2:]
     mm = int(month)
@@ -51,7 +50,7 @@ def quebec_drivers_licence(name, first_name, year, month, day, sex='M'):
 
 # STREAMLIT
 st.set_page_config(page_title="License generator", page_icon="🚙", layout="centered")
-st.title("🚗 GÉNÉRATEUR DE PERMIS DU QUÉBEC")
+st.title("SAAQlick Pas du tout!")
 st.markdown("Trouve ton permis en 30 secondes")
 
 with st.form("licence_form"):
@@ -77,4 +76,4 @@ with st.form("licence_form"):
             final = f"{random.randint(0, 99):02d}"
             full = f"{base_code}-{final}"
             st.success(f"✅ Numéro de permis : **{full}**")
-            st.caption("⚠️ Resultat peut ne pas etre exacte")
+            st.caption("⚠️ les 2 derniers peut ne pas etre exacte")
