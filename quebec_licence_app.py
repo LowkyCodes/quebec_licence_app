@@ -1,9 +1,8 @@
 import streamlit as st
 import random
 
-# SAAQ
-def saaq_soundex(last_name, first_name):
-
+# Soundex SAAQ modifié - version personnalisée avec dernier chiffre fixé à 4
+def saaq_soundex_fixed(last_name):
     mapping = {
         'A': '', 'E': '', 'I': '', 'O': '', 'U': '', 'H': '', 'W': '', 'Y': '',
         'B': '1', 'P': '1', 'F': '1', 'V': '1',
@@ -25,29 +24,12 @@ def saaq_soundex(last_name, first_name):
                 encoded.append(code)
 
     code = first_letter + ''.join(encoded)
-    code = (code + '000')[:4]
-
-    # Adjust the 4th character using the first name initial (approximation)
-    prenom_initial = first_name[0].upper()
-    lettre_map = {
-        'A': '1', 'B': '1', 'C': '1',
-        'D': '2', 'E': '2', 'F': '2',
-        'G': '3', 'H': '3', 'I': '3',
-        'J': '4', 'K': '4', 'L': '4',
-        'M': '5', 'N': '5', 'O': '5',
-        'P': '6', 'Q': '6', 'R': '6',
-        'S': '7', 'T': '7', 'U': '7',
-        'V': '8', 'W': '8', 'X': '8',
-        'Y': '9', 'Z': '9'
-    }
-
-    last_digit = lettre_map.get(prenom_initial, '0')
-    code = code[:3] + last_digit
+    code = (code + '000')[:3] + '4'  # Forcer le 4e caractère à 4
     return code
 
 
 def quebec_drivers_licence(last_name, first_name, year, month, day, sex='M'):
-    soundex_code = saaq_soundex(last_name, first_name)
+    soundex_code = saaq_soundex_fixed(last_name)
     yy = str(year)[-2:]
     mm = int(month)
     if sex.upper() == 'F':
@@ -87,5 +69,5 @@ with st.form("licence_form"):
             final_digits = f"{random.randint(0, 99):02d}"
             licence_full = f"{base_code}-{final_digits}"
 
-            st.success(f"✅ Numéro de permis approximatif : **{licence_full}**")
-            st.caption("⚠️ Ce code est une approximation basée sur les règles publiques connues. Le vrai algorithme utilisé par la SAAQ est confidentiel.")
+            st.success(f"✅ Numéro de permis estimé : **{licence_full}**")
+            st.caption("⚠️ en contruction les resultats peuvent etre eronne")
