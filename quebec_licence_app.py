@@ -39,10 +39,10 @@ def quebec_drivers_licence(last_name, first_name, year, month, day, sex='M'):
 
 
 
-st.set_page_config(page_title="License generator", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="License generator", page_icon="🚙🛣️", layout="centered")
 
 st.title("🚗 QUEBEC LICENCE GENERATOR")
-st.markdown("This tool will save you a bunch of time no cap")
+st.markdown("Tu as oublié ton # de permis ? Ne stress plus!")
 
 with st.form("licence_form"):
     last_name = st.text_input("Nom de famille")
